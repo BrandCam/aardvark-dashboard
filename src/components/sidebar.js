@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { Layout, Menu, Breadcrumb } from "antd";
 import {
   DesktopOutlined,
-  PieChartOutlined,
-  FileOutlined,
+  HomeOutlined,
+  FileAddOutlined,
   TeamOutlined,
-  UserOutlined,
+  BugOutlined,
+  UsergroupAddOutlined,
+  SwitcherOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
@@ -39,27 +42,53 @@ const Sidebar = (props) => {
       <Logo>{collapsed ? "A" : "Arrdvark"}</Logo>
       <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
         <Item key="1">
-          <PieChartOutlined />
+          <HomeOutlined />
           <span>Home</span>
           <Link to="/home" />
         </Item>
-        <Item key="2" icon={<DesktopOutlined />}>
+        <SubMenu key="sub1" icon={<BugOutlined />} title="Reports">
+          <Item key="2">
+            <Link to="/reports/bugs" />
+            Bugs
+          </Item>
+          <Item key="3">
+            <Link to="/reports/Other" />
+            Other
+          </Item>
+        </SubMenu>
+        <Item key="4" icon={<DesktopOutlined />}>
           Option 2
+          <Link to="/project-board" />
         </Item>
-        <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-          <Item key="3">Tom</Item>
-          <Item key="4">Bill</Item>
-          <Item key="5">Alex</Item>
+        <Item key="8">
+          <SwitcherOutlined />
+          <span>Projects</span>
+          <Link to="/projects" />
+        </Item>
+        <SubMenu key="sub2" icon={<TeamOutlined />} title="Team Mates">
+          <Item key="5">Tom</Item>
+          <Item key="6">Bill</Item>
+          <Item key="7">Alex</Item>
         </SubMenu>
-        <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-          <Item key="6">Team 1</Item>
-          <Item key="8">Team 2</Item>
+        <SubMenu key="sub4" icon={<UsergroupAddOutlined />} title="Invite">
+          <Item key="11">
+            Invite Team Mate
+            <Link to="/invite/team" />
+          </Item>
+          <Item key="12">
+            Invite Guest
+            <Link to="/invite/guest" />
+          </Item>
         </SubMenu>
-
-        <Item key="9">
-          <FileOutlined />
+        <Item key="10">
+          <FileAddOutlined />
           <span>Create Report</span>
           <Link to="/create-report" />
+        </Item>
+        <Item key="13">
+          <SettingOutlined />
+          <span>Options</span>
+          <Link to="/settings" />
         </Item>
       </Menu>
     </Sider>

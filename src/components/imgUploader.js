@@ -1,5 +1,5 @@
 import { Upload, Modal } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PictureOutlined } from "@ant-design/icons";
 import React from "react";
 import { app } from "../firebase";
 import { useState } from "react";
@@ -65,7 +65,7 @@ const PicturesWall = (props) => {
 
   const uploadButton = (
     <div>
-      <PlusOutlined />
+      <PictureOutlined />
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );

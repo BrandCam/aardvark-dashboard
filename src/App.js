@@ -1,12 +1,20 @@
 import React from "react";
+import {
+  Home,
+  SignIn,
+  CreateReport,
+  SelectProject,
+  Reports,
+  Board,
+  Invite,
+  Settings,
+} from "./pages/Index";
 import "./App.css";
 import { Route, Switch, Link, Router } from "react-router-dom";
 import Sidebar from "./components/sidebar";
-import SignIn from "./pages/signIn";
-import Home from "./pages/home";
+
 import { Button } from "antd";
 import { Layout } from "antd";
-import CreateReport from "./pages/createReport";
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -28,8 +36,32 @@ function App() {
               <Route path="/home">
                 <Home />
               </Route>
+              <Route path="/projects">
+                <SelectProject />
+              </Route>
+              <Route path="/reports/bugs">
+                <Reports type="bugs" />
+              </Route>
+              <Route path="/reports/other">
+                <Reports type="other" />
+              </Route>
+              <Route path="/project-board">
+                <Board />
+              </Route>
+              <Route path="/invite/team">
+                <Invite type="team" />
+              </Route>
+              <Route path="/invite/guest">
+                <Invite type="guest" />
+              </Route>
               <Route path="/create-report">
                 <CreateReport />
+              </Route>
+              <Route path="/projects">
+                <SelectProject />
+              </Route>
+              <Route path="/settings">
+                <Settings />
               </Route>
               <Route path="/">
                 <SignIn />

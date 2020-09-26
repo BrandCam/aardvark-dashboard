@@ -7,8 +7,8 @@ import {
   AntSelect,
   AntTextArea,
   AntInput,
-} from "./CreateAntFields/CreateAntFields";
-import { isRequired } from "./FormValidation/FormValidation";
+} from "../HOC/CreateAntFields/CreateAntFields";
+import { isRequired } from "../Helpers/FormValidation/FormValidation";
 const initialValues = {};
 const selectOptions = ["Bug", "Suggestion"];
 
