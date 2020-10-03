@@ -24,13 +24,12 @@ const PicturesWall = (props) => {
     const fileRef = storageRef.child(file.uid);
     const success = await fileRef.put(file);
     if (!success) {
-      // console.log("failed");
       return;
     }
     onSuccess("ok");
-    // console.log("Uploaded File", file.uid);
+
     const url = await fileRef.getDownloadURL();
-    // console.log(url);
+
     props.setImgUrls([...props.imgUrls, url]);
   };
   const handleRemove = async ({ uid }) => {
@@ -41,7 +40,7 @@ const PicturesWall = (props) => {
     const newUrls = [...props.imgUrls];
     newUrls.splice(index, 1);
     props.setImgUrls(newUrls);
-    console.log(index);
+
     if (success) {
       return true;
     }
@@ -58,7 +57,6 @@ const PicturesWall = (props) => {
     );
   };
   const handleChange = ({ fileList }) => {
-    // console.log(fileList);
     // this.setState({ fileList });
     setFileList(fileList);
   };
@@ -69,7 +67,7 @@ const PicturesWall = (props) => {
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
-  console.log(props);
+
   return (
     <>
       <Upload

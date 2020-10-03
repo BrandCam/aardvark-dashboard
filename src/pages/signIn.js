@@ -1,25 +1,12 @@
 import React from "react";
 import LoginForm from "../components/logForm";
-import styled from "styled-components";
-
-const LogInBg = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-  position: absolute;
-  right: 0;
-  top: 0;
-`;
+import BackDrop from "../components/UI/backDrop";
 
 const SignIn = (props) => {
   return (
-    <LogInBg>
+    <BackDrop>
       <LoginForm />
-    </LogInBg>
+    </BackDrop>
   );
 };
 

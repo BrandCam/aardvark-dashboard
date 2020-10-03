@@ -1,11 +1,12 @@
-import React, { useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
-import { useLazyQuery } from "@apollo/client";
-import { LOG_IN } from "../Queys/fetch";
-import { UserContext, actionTypes } from "../HOC/Context/LoginContext";
+import { useMutation } from "@apollo/client";
+import { CREATE_USER } from "../Queys/mutations";
 import { Link, useHistory } from "react-router-dom";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { assertNamedType } from "graphql";
+import { UserContext, actionTypes } from "../HOC/Context/LoginContext";
 
 const LogForm = styled(Form)`
   width: 400px;
@@ -20,45 +21,68 @@ const LogForm = styled(Form)`
     background-color: rgba(255, 255, 255, 0);
     color: white;
   }
+  #normal_login_display_name {
+    background-color: rgba(255, 255, 255, 0);
+    color: white;
+  }
   box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
     0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
     0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
     0 100px 80px rgba(0, 0, 0, 0.12);
 `;
 
-const LoginForm = () => {
+const CreateAccountForm = () => {
   let user = useContext(UserContext);
   let history = useHistory();
-  const [logIn, { called, loading, data, error }] = useLazyQuery(LOG_IN);
-  let { dispatch } = user;
-  const onFinish = ({ email, password }) => {
-    console.log("Received values of form: ", { password, email });
-    logIn({ variables: { password, email } });
-    console.log(data, loading, called, error);
-  };
-
-  useEffect(() => {
-    if (called && !loading && data) {
-      let token = data.logInUser.token;
+  let [createUser, res] = useMutation(CREATE_USER, {
+    update: (proxy, { data }) => {
+      const { createUser } = data;
+      const { token } = createUser;
       localStorage.setItem("token", `Bearer ${token}`);
       dispatch({
         type: actionTypes.SET_TOKEN,
         payload: localStorage.getItem("token"),
       });
       dispatch({ type: actionTypes.SET_LOGIN, payload: true });
+    },
+  });
+  let { loading, error } = res;
+  let { dispatch } = user;
+  const onFinish = async ({ email, password, display_name }) => {
+    await createUser({ variables: { email, password, display_name } });
+    if (!error) {
+      history.push("/");
     }
-    console.log("called from login");
-  }, [called, loading]);
+  };
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error! {error.message}</div>;
 
   return (
     <LogForm
       name="normal_login"
       className="login-form"
-      initialValues={{
-        remember: true,
-      }}
+      initialValues={{}}
       onFinish={onFinish}
     >
+      <Form.Item
+        name="display_name"
+        rules={[
+          {
+            required: true,
+            message: "Please input a Display Name!",
+          },
+        ]}
+      >
+        <Input
+          prefix={<UserOutlined className="site-form-item-icon" />}
+          type="text"
+          placeholder="Display Name"
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.2)",
+            border: "none",
+          }}
+        />
+      </Form.Item>
       <Form.Item
         name="email"
         rules={[
@@ -97,17 +121,6 @@ const LoginForm = () => {
           }}
         />
       </Form.Item>
-      <Form.Item>
-        <Form.Item name="remember" valuePropName="checked" noStyle>
-          <Checkbox style={{ float: "left", color: "white" }}>
-            Remember me
-          </Checkbox>
-        </Form.Item>
-
-        <a className="login-form-forgot" style={{ float: "right" }} href="">
-          Forgot password
-        </a>
-      </Form.Item>
 
       <Form.Item style={{ color: "white" }}>
         <Button
@@ -116,12 +129,12 @@ const LoginForm = () => {
           className="login-form-button"
           style={{ width: "100%" }}
         >
-          Log in
+          Create
         </Button>
-        Or <Link to="/new-user">register now!</Link>
+        Or <Link to="/">Log In</Link>
       </Form.Item>
     </LogForm>
   );
 };
 
-export default LoginForm;
+export default CreateAccountForm;

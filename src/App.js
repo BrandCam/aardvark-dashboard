@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Home,
   SignIn,
@@ -8,10 +8,12 @@ import {
   Board,
   Invite,
   Settings,
+  CreateAccount,
 } from "./pages/Index";
 import "./App.css";
 import { Route, Switch, Link, Router } from "react-router-dom";
 import Sidebar from "./components/sidebar";
+import { UserContext } from "./HOC/Context/LoginContext";
 
 import { Button } from "antd";
 import { Layout } from "antd";
@@ -19,6 +21,7 @@ import { Layout } from "antd";
 const { Header, Footer, Sider, Content } = Layout;
 
 function App() {
+  let { state } = useContext(UserContext);
   return (
     <div style={{}} className="App">
       <Layout style={{ minHeight: "100vh" }}>
@@ -33,9 +36,6 @@ function App() {
             }}
           >
             <Switch>
-              <Route path="/home">
-                <Home />
-              </Route>
               <Route path="/projects">
                 <SelectProject />
               </Route>
@@ -63,9 +63,10 @@ function App() {
               <Route path="/settings">
                 <Settings />
               </Route>
-              <Route path="/">
-                <SignIn />
+              <Route path="/new-user">
+                <CreateAccount />
               </Route>
+              <Route path="/">{state.loggedIn ? <Home /> : <SignIn />}</Route>
             </Switch>
           </Content>
           <Footer style={{ backgroundColor: "#001427", color: "white" }}>

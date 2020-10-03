@@ -6,6 +6,7 @@ import Reports from "./reports";
 import Board from "./board";
 import Invite from "./invite";
 import Settings from "./settings";
+import CreateAccount from "./createAccount";
 
 export {
   Home,
@@ -16,4 +17,5 @@ export {
   Board,
   Invite,
   Settings,
+  CreateAccount,
 };
