@@ -36,35 +36,32 @@ const FullReport = ({
           <p>{report.description} </p>
         </div>
         <div>
-          <Carousel
-            effect="fade"
-            dotPosition="left"
-            dots={{ className: "dots" }}
-          >
+          {report.img_urls.length > 1 ? (
+            <Carousel
+              effect="fade"
+              dotPosition="left"
+              dots={{ className: "dots" }}
+            >
+              {report.img_urls.map((url) => (
+                <Image
+                  key={url}
+                  placeholder
+                  width={300}
+                  height={300}
+                  src={url}
+                />
+              ))}
+            </Carousel>
+          ) : report.img_urls.length === 1 ? (
             <Image
               placeholder
-              width={200}
-              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+              width={300}
+              height={300}
+              src={report.img_urls[0]}
             />
-
-            <Image
-              placeholder
-              width={200}
-              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-            />
-
-            <Image
-              placeholder
-              width={200}
-              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-            />
-
-            <Image
-              placeholder
-              width={200}
-              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-            />
-          </Carousel>
+          ) : (
+            <Image placeholder width={300} height={300} />
+          )}
           <div>
             <div>Video URL : {report.video_url ? report.video_url : "NA"}</div>
             <div>

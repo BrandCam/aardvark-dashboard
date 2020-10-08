@@ -28,7 +28,7 @@ const { SubMenu, Item } = Menu;
 const Sidebar = (props) => {
   let [collapsed, setCollapsed] = useState(true);
   let location = useLocation();
-  console.log(location);
+
   return (
     <Sider
       collapsible

@@ -47,7 +47,11 @@ const Reports = ({ reports }) => {
       <ContentCard width="80%">
         <ReportWrap>
           {reports.map((report) => (
-            <ReportCard report={report} toggelModal={handelOpen} />
+            <ReportCard
+              key={report.id}
+              report={report}
+              toggelModal={handelOpen}
+            />
           ))}
         </ReportWrap>
       </ContentCard>
