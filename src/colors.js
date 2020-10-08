@@ -5,4 +5,5 @@ export const COLOR_TABLE = {
   Breaking: "(255, 7, 58",
   Minor: "(24, 144, 255",
   Major: "(253, 95, 0",
+  New: "(57,255,20",
 };

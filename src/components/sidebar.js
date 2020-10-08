@@ -11,7 +11,7 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Logo = styled.div`
   display: flex;
@@ -27,7 +27,8 @@ const { SubMenu, Item } = Menu;
 
 const Sidebar = (props) => {
   let [collapsed, setCollapsed] = useState(true);
-
+  let location = useLocation();
+  console.log(location);
   return (
     <Sider
       collapsible
@@ -40,52 +41,62 @@ const Sidebar = (props) => {
       }}
     >
       <Logo>{collapsed ? "A" : "Arrdvark"}</Logo>
-      <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-        <Item key="1">
+      <Menu
+        theme="dark"
+        defaultSelectedKeys={[location.pathname]}
+        mode="inline"
+      >
+        <Item key="/home">
           <HomeOutlined />
           <span>Home</span>
           <Link to="/home" />
         </Item>
         <SubMenu key="sub1" icon={<BugOutlined />} title="Reports">
-          <Item key="2">
+          <Item key="/reports/bugs">
             <Link to="/reports/bugs" />
             Bugs
           </Item>
-          <Item key="3">
+          <Item key="/reports/Other">
             <Link to="/reports/Other" />
             Other
           </Item>
         </SubMenu>
-        <Item key="4" icon={<DesktopOutlined />}>
-          Option 2
+        <Item key="/project-board" disabled icon={<DesktopOutlined />}>
+          Project Plan
           <Link to="/project-board" />
         </Item>
-        <Item key="8">
+        <Item key="/projects">
           <SwitcherOutlined />
           <span>Projects</span>
           <Link to="/projects" />
         </Item>
         <SubMenu key="sub2" icon={<TeamOutlined />} title="Team Mates">
-          <Item key="5">Tom</Item>
-          <Item key="6">Bill</Item>
-          <Item key="7">Alex</Item>
+          <Item disabled key="5">
+            Tom
+          </Item>
+          <Item disabled key="6">
+            Bill
+          </Item>
+          <Item disabled key="7">
+            Alex
+          </Item>
         </SubMenu>
         <SubMenu key="sub4" icon={<UsergroupAddOutlined />} title="Invite">
-          <Item key="11">
+          <Item key="/invite/team">
             Invite Team Mate
             <Link to="/invite/team" />
           </Item>
-          <Item key="12">
+          <Item key="/invite/guest">
             Invite Guest
             <Link to="/invite/guest" />
           </Item>
         </SubMenu>
-        <Item key="10">
+        <Item key="/create-report">
           <FileAddOutlined />
           <span>Create Report</span>
           <Link to="/create-report" />
         </Item>
-        <Item key="13">
+        <Item key="/settings">
           <SettingOutlined />
           <span>Options</span>
           <Link to="/settings" />

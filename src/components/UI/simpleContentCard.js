@@ -21,6 +21,16 @@ const SimpleCard = styled.div`
     padding: 20px;
     border-bottom: 1px solid #1f1f1f;
     background-color: #050b10;
+
+    input,
+    textarea,
+    .ant-select-single:not(.ant-select-customize-input) .ant-select-selector,
+    .ant-select-dropdown {
+      border: none;
+      border-bottom: 1px solid #1f1f1f;
+      background-color: #050b10;
+      color: white;
+    }
   }
   .footer {
     display: flex;

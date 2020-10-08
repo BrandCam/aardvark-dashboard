@@ -125,7 +125,7 @@ const ReportForm = (props) => {
               />
             </FormFields>
             <div className="footer">
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" loading={loading} htmlType="submit">
                 Submit
               </Button>
             </div>
