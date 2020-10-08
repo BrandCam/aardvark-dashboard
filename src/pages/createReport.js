@@ -1,10 +1,9 @@
 import React from "react";
-import PicturesWall from "../components/imgUploader";
 import ReportForm from "../components/reportForm";
 
 const CreateReport = (props) => {
   return (
-    <div>
+    <div style={{ marginTop: "40px" }}>
       <ReportForm />
     </div>
   );

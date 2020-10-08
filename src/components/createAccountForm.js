@@ -5,7 +5,6 @@ import { CREATE_USER } from "../Queys/mutations";
 import { Link, useHistory } from "react-router-dom";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { assertNamedType } from "graphql";
 import { UserContext, actionTypes } from "../HOC/Context/LoginContext";
 
 const LogForm = styled(Form)`

@@ -17,6 +17,7 @@ import { UserContext } from "./HOC/Context/LoginContext";
 
 import { Button } from "antd";
 import { Layout } from "antd";
+import MsgSider from "./components/SideMsgs/MsgSider";
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -40,10 +41,10 @@ function App() {
                 <SelectProject />
               </Route>
               <Route path="/reports/bugs">
-                <Reports type="bugs" />
+                <Reports type="Bug" />
               </Route>
               <Route path="/reports/other">
-                <Reports type="other" />
+                <Reports type="Suggestion" />
               </Route>
               <Route path="/project-board">
                 <Board />
@@ -73,6 +74,7 @@ function App() {
             Footer
           </Footer>
         </Layout>
+        <MsgSider />
       </Layout>
     </div>
   );

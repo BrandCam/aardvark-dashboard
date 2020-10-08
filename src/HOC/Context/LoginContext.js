@@ -3,10 +3,12 @@ import { useJwt, decodeToken } from "react-jwt";
 
 const UserContext = createContext();
 const token = localStorage.getItem("token");
+const project = localStorage.getItem("project");
 
 const initialState = {
   loggedIn: token ? true : false,
   token: token ? token : null,
+  project: project ? project : null,
   id: null,
   email: null,
   display_name: null,
@@ -25,8 +27,10 @@ const reducer = (state, action) => {
       return { ...state, token: action.payload };
     case "SET_LOGIN":
       return { ...state, loggedIn: action.payload };
-    case "SET_PROJECT":
+    case "SET_PROJECT": {
+      localStorage.setItem("project", action.payload);
       return { ...state, project: action.payload };
+    }
     case "SET_USER":
       return {
         ...state,

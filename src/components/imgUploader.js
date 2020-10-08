@@ -1,4 +1,5 @@
 import { Upload, Modal } from "antd";
+import ReportModal from "../components/UI/reportModal";
 import { PictureOutlined } from "@ant-design/icons";
 import React from "react";
 import { app } from "../firebase";
@@ -80,14 +81,14 @@ const PicturesWall = (props) => {
       >
         {fileList.length >= 6 ? null : uploadButton}
       </Upload>
-      <Modal
+      <ReportModal
         visible={previewVisible}
         title={previewTitle}
         footer={null}
         onCancel={handleCancel}
       >
         <img alt="example" style={{ width: "100%" }} src={previewImage} />
-      </Modal>
+      </ReportModal>
     </>
   );
 };

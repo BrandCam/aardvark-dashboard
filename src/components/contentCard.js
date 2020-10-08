@@ -30,12 +30,14 @@ const animate4 = keyframes`
 `;
 
 const CardWrap = styled.div`
+  width: ${(props) => props.width || ""};
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   border-radius: 10px;
   .card {
+    width: 100%;
     position: relative;
     background: linear-gradient(to top, #001427, #002140);
     display: flex;
@@ -50,6 +52,7 @@ const CardWrap = styled.div`
   }
   .card::before {
     content: "";
+    z-index: -1;
     position: absolute;
     top: 2px;
     left: 2px;
@@ -60,11 +63,12 @@ const CardWrap = styled.div`
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
   }
-  span {
+  .line {
+    display: ${(props) => (props.animated ? "" : "none")};
     transition: 0.5;
     opacity: 0;
   }
-  .card span:nth-child(2) {
+  .card .line-two {
     position: absolute;
     top: 0;
     right: 0;
@@ -74,7 +78,7 @@ const CardWrap = styled.div`
     animation: ${animate2} 2s linear infinite;
     animation-delay: 1s;
   }
-  .card span:nth-child(3) {
+  .card .line-three {
     position: absolute;
     top: 0;
     left: 0;
@@ -84,7 +88,7 @@ const CardWrap = styled.div`
     animation: ${animate3} 2s linear infinite;
     animation-delay: 1s;
   }
-  .card span:nth-child(4) {
+  .card .line-four {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -93,7 +97,7 @@ const CardWrap = styled.div`
     background: linear-gradient(to left, transparent, #1779ff);
     animation: ${animate4} 2s linear infinite;
   }
-  .card span:nth-child(1) {
+  .card .line-one {
     position: absolute;
     top: 0;
     left: 0;
@@ -105,19 +109,19 @@ const CardWrap = styled.div`
 
   .card:hover content,
   .card:hover,
-  .card:hover span {
+  .card:hover .line {
     opacity: 1;
   }
 `;
-const ContentCard = (props) => {
+const ContentCard = ({ animated, width, onClick, children }) => {
   return (
-    <CardWrap>
+    <CardWrap animated={animated} width={width} onClick={onClick}>
       <div className="card">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <div className="content">{props.children}</div>
+        <span className="line line-one"></span>
+        <span className="line line-two"></span>
+        <span className="line line-three"></span>
+        <span className="line line-four"></span>
+        {children}
       </div>
     </CardWrap>
   );
