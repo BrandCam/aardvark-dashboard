@@ -12,6 +12,7 @@ import {
 } from "../HOC/CreateAntFields/CreateAntFields";
 import { isRequired } from "../Helpers/FormValidation/FormValidation";
 import SimpleCard from "../components/UI/simpleContentCard";
+
 const initialValues = {};
 const selectOptions = ["Bug", "Suggestion"];
 

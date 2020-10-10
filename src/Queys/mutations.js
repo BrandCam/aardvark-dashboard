@@ -60,4 +60,38 @@ const EDIT_USER = gql`
     }
   }
 `;
-export { CREATE_USER, CREATE_REPORT, EDIT_USER };
+
+const EDIT_REPORT = gql`
+  mutation updateReport(
+    $id: ID!
+    $project_id: ID!
+    $category: String
+    $img_urls: [String]
+    $video_url: String
+    $is_resolved: Boolean
+    $description: String
+    $summary: String
+    $severity: String
+  ) {
+    updateReport(
+      id: $id
+      project_id: $project_id
+      category: $category
+      img_urls: $img_urls
+      video_url: $video_url
+      is_resolved: $is_resolved
+      description: $description
+      summary: $summary
+      severity: $severity
+    ) {
+      category
+      description
+      summary
+      severity
+      img_urls
+      video_url
+      is_resolved
+    }
+  }
+`;
+export { CREATE_USER, CREATE_REPORT, EDIT_USER, EDIT_REPORT };

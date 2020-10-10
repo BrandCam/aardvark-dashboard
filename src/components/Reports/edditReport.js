@@ -1,145 +1,202 @@
-import React from "react";
+import React, { useState } from "react";
+import PicturesWall from "../imgUploader";
+import { Button, Col, Row } from "antd";
+import { Formik, Form, Field } from "formik";
 import {
-  Drawer,
-  Form,
-  Button,
-  Col,
-  Row,
-  Input,
-  Select,
-  DatePicker,
-} from "antd";
+  AntTextArea,
+  AntInput,
+  AntSelect,
+} from "../../HOC/CreateAntFields/CreateAntFields";
+import FormDrawer from "./edditReport.styles";
 import { PlusOutlined } from "@ant-design/icons";
+import { isRequired } from "../../Helpers/FormValidation/FormValidation";
+import { useMutation } from "@apollo/client";
+import { EDIT_REPORT } from "../../Queys/mutations";
 
-const { Option } = Select;
+const selectOptions = ["Bug", "Suggestion"];
+const severityOptions = ["New", "Minor", "Major", "Breaking"];
+const resolvedOptions = ["false", "true"];
 
-const EdditDrawer = ({ visable, setVisable }) => {
+const EdditDrawer = ({ report, visable, setVisable }) => {
+  let [updateReport, res] = useMutation(EDIT_REPORT);
+  let [newImgs, setNewImgs] = useState([]);
+  let {
+    category,
+    description,
+    id,
+    is_resolved,
+    severity,
+    summary,
+    video_url,
+    img_urls,
+  } = report;
+  const initialValues = {
+    category,
+    description,
+    id,
+    is_resolved: is_resolved ? "true" : "false",
+    severity,
+    summary,
+    video_url,
+    img_urls: [...img_urls],
+  };
   return (
     <>
-      <Drawer
-        title="Create a new account"
-        width={720}
-        onClose={setVisable}
-        visible={visable}
-        bodyStyle={{ paddingBottom: 80 }}
-        footer={
-          <div
-            style={{
-              textAlign: "right",
-            }}
-          >
-            <Button onClick={setVisable} style={{ marginRight: 8 }}>
-              Cancel
-            </Button>
-            <Button onClick={setVisable} type="primary">
-              Submit
-            </Button>
-          </div>
-        }
+      <Formik
+        enableReinitialize
+        initialValues={initialValues}
+        onSubmit={async (values, actions) => {
+          const project_id = localStorage.getItem("project");
+          const output = {
+            ...values,
+            is_resolved: values.is_resolved === "true",
+            img_urls: [...newImgs],
+            project_id,
+          };
+
+          setTimeout(() => {
+            console.log(JSON.stringify(output, null, 2));
+            actions.setSubmitting(false);
+          }, 1000);
+
+          await updateReport({
+            variables: {
+              ...output,
+            },
+          });
+          if (!res.error) {
+            alert("It Worked");
+          } else {
+            alert(res.error.message);
+          }
+        }}
       >
-        <Form layout="vertical" hideRequiredMark>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="name"
-                label="Name"
-                rules={[{ required: true, message: "Please enter user name" }]}
-              >
-                <Input placeholder="Please enter user name" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="url"
-                label="Url"
-                rules={[{ required: true, message: "Please enter url" }]}
-              >
-                <Input
-                  style={{ width: "100%" }}
-                  addonBefore="http://"
-                  addonAfter=".com"
-                  placeholder="Please enter url"
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="owner"
-                label="Owner"
-                rules={[{ required: true, message: "Please select an owner" }]}
-              >
-                <Select placeholder="Please select an owner">
-                  <Option value="xiao">Xiaoxiao Fu</Option>
-                  <Option value="mao">Maomao Zhou</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="type"
-                label="Type"
-                rules={[{ required: true, message: "Please choose the type" }]}
-              >
-                <Select placeholder="Please choose the type">
-                  <Option value="private">Private</Option>
-                  <Option value="public">Public</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="approver"
-                label="Approver"
-                rules={[
-                  { required: true, message: "Please choose the approver" },
-                ]}
-              >
-                <Select placeholder="Please choose the approver">
-                  <Option value="jack">Jack Ma</Option>
-                  <Option value="tom">Tom Liu</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="dateTime"
-                label="DateTime"
-                rules={[
-                  { required: true, message: "Please choose the dateTime" },
-                ]}
-              >
-                <DatePicker.RangePicker
-                  style={{ width: "100%" }}
-                  getPopupContainer={(trigger) => trigger.parentElement}
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={24}>
-              <Form.Item
-                name="description"
-                label="Description"
-                rules={[
-                  {
-                    required: true,
-                    message: "please enter url description",
-                  },
-                ]}
-              >
-                <Input.TextArea
-                  rows={4}
-                  placeholder="please enter url description"
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Drawer>
+        {(props) => (
+          <Form onSubmit={props.handleSubmit}>
+            <FormDrawer
+              title="Update Report"
+              width={720}
+              onClose={setVisable}
+              visible={visable}
+              bodyStyle={{ paddingBottom: 80 }}
+              footer={
+                <div
+                  style={{
+                    textAlign: "right",
+                  }}
+                >
+                  <Button
+                    type="danger"
+                    onClick={setVisable}
+                    style={{ marginRight: 8 }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={props.handleSubmit}
+                    htmlType="submit"
+                    type="primary"
+                  >
+                    Submit
+                  </Button>
+                </div>
+              }
+            >
+              <Row gutter={16}>
+                <Col span={12}>
+                  <span>Type</span>
+                  <Field
+                    placeholder="Type Of Report"
+                    component={AntSelect}
+                    name="category"
+                    lable="report type"
+                    selectOptions={selectOptions}
+                    validate={isRequired}
+                    submitCount={props.submitCount}
+                    tokenseperators={[,]}
+                    hasFeedback
+                  />
+                </Col>
+                <Col span={12}>
+                  <span>Severity</span>
+                  <Field
+                    placeholder="Severity of Problem"
+                    component={AntSelect}
+                    name="severity"
+                    lable="report severity"
+                    selectOptions={severityOptions}
+                    validate={isRequired}
+                    submitCount={props.submitCount}
+                    tokenseperators={[,]}
+                    hasFeedback
+                  />
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={24}>
+                  <span>Summary</span>
+                  <Field
+                    type="text"
+                    placeholder="Short Summary"
+                    component={AntInput}
+                    name="summary"
+                    lable="report summary"
+                    validate={isRequired}
+                    submitCount={props.submitCount}
+                    hasFeedback
+                  />
+                </Col>
+              </Row>
+
+              <Row gutter={16}>
+                <Col span={24}>
+                  <span>Description</span>
+                  <Field
+                    type="text"
+                    placeholder="Detailed Description"
+                    component={AntTextArea}
+                    name="description"
+                    lable="report type"
+                    rows={8}
+                    validate={isRequired}
+                    submitCount={props.submitCount}
+                    hasFeedback
+                  />
+                </Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}>
+                  <span>Video</span>
+                  <Field
+                    placeholder="Video Url"
+                    component={AntInput}
+                    type="text"
+                    name="video_url"
+                    lable="Video Url"
+                    submitCount={props.submitCount}
+                    hasFeedback
+                  />
+                  <span>Is Resolved</span>
+                  <Field
+                    placeholder="Is Resolved"
+                    component={AntSelect}
+                    name="is_resolved"
+                    lable="report type"
+                    selectOptions={resolvedOptions}
+                    validate={isRequired}
+                    submitCount={props.submitCount}
+                    tokenseperators={[,]}
+                    hasFeedback
+                  />
+                </Col>
+                <Col span={12}>
+                  <PicturesWall imgUrls={newImgs} setImgUrls={setNewImgs} />
+                </Col>
+              </Row>
+            </FormDrawer>
+          </Form>
+        )}
+      </Formik>
     </>
   );
 };

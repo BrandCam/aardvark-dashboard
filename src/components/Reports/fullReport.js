@@ -71,7 +71,11 @@ const FullReport = ({
           </div>
         </div>
       </FullReportWrap>
-      <EdditDrawer visable={updateVisible} setVisable={toggelUpdate} />
+      <EdditDrawer
+        report={report}
+        visable={updateVisible}
+        setVisable={toggelUpdate}
+      />
     </>
   ) : (
     <Empty />
