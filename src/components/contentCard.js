@@ -40,13 +40,14 @@ const CardWrap = styled.div`
     width: 100%;
     position: relative;
     background: linear-gradient(to top, #001427, #002140);
+
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 30px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
     overflow: hidden;
-    opacity: 0.5;
+    opacity: ${({ active }) => (active ? "1" : "0.5")};
     transition: 0.5s;
     border-radius: 10px;
   }
@@ -58,7 +59,6 @@ const CardWrap = styled.div`
     left: 2px;
     bottom: 2px;
     width: 50%;
-    background: linear-gradient(to top, #001427, #002140);
     pointer-events: none;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
@@ -66,7 +66,7 @@ const CardWrap = styled.div`
   .line {
     display: ${(props) => (props.animated ? "" : "none")};
     transition: 0.5;
-    opacity: 0;
+    opacity: ${({ active }) => (active ? "1" : "0")};
   }
   .card .line-two {
     position: absolute;
@@ -74,7 +74,10 @@ const CardWrap = styled.div`
     right: 0;
     width: 3px;
     height: 100%;
-    background: linear-gradient(to bottom, transparent, #1779ff);
+    background: ${({ active }) =>
+      active
+        ? "linear-gradient(to bottom, transparent,  #39FF14)"
+        : "linear-gradient(to bottom, transparent,  #1779ff)"};
     animation: ${animate2} 2s linear infinite;
     animation-delay: 1s;
   }
@@ -84,7 +87,10 @@ const CardWrap = styled.div`
     left: 0;
     width: 3px;
     height: 100%;
-    background: linear-gradient(to top, transparent, #1779ff);
+    background: ${({ active }) =>
+      active
+        ? "linear-gradient(to top, transparent,  #39FF14)"
+        : "linear-gradient(to top, transparent,  #1779ff)"};
     animation: ${animate3} 2s linear infinite;
     animation-delay: 1s;
   }
@@ -94,7 +100,10 @@ const CardWrap = styled.div`
     left: 0;
     width: 100%;
     height: 3px;
-    background: linear-gradient(to left, transparent, #1779ff);
+    background: ${({ active }) =>
+      active
+        ? "linear-gradient(to left, transparent,  #39FF14)"
+        : "linear-gradient(to left, transparent,  #1779ff)"};
     animation: ${animate4} 2s linear infinite;
   }
   .card .line-one {
@@ -103,7 +112,10 @@ const CardWrap = styled.div`
     left: 0;
     width: 100%;
     height: 3px;
-    background: linear-gradient(to right, transparent, #1779ff);
+    background: ${({ active }) =>
+      active
+        ? "linear-gradient(to right, transparent,  #39FF14)"
+        : "linear-gradient(to right, transparent,  #1779ff)"};
     animation: ${animate1} 2s linear infinite;
   }
 
@@ -113,10 +125,15 @@ const CardWrap = styled.div`
     opacity: 1;
   }
 `;
-const ContentCard = ({ animated, width, onClick, children }) => {
+const ContentCard = ({ animated, width, onClick, active, children, style }) => {
   return (
-    <CardWrap animated={animated} width={width} onClick={onClick}>
-      <div className="card">
+    <CardWrap
+      active={active}
+      animated={animated}
+      width={width}
+      onClick={onClick}
+    >
+      <div style={style} className="card">
         <span className="line line-one"></span>
         <span className="line line-two"></span>
         <span className="line line-three"></span>

@@ -2,14 +2,14 @@ import firebase from "firebase";
 import "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBgJMamgE5VioreMsZSQiPG88XIzkncvSs",
-  authDomain: "aardvark-ad2d6.firebaseapp.com",
-  databaseURL: "https://aardvark-ad2d6.firebaseio.com",
-  projectId: "aardvark-ad2d6",
-  storageBucket: "aardvark-ad2d6.appspot.com",
-  messagingSenderId: "894001134038",
-  appId: "1:894001134038:web:9493bb092090140d038c77",
-  measurementId: "G-Z85QZTLM7D",
+  apiKey: process.env.REACT_APP_FIREBASSE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASSE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASSE_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIREBASSE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASSE_MSG_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASSE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASSE_MEASUREMENT_ID,
 };
 
 export const app = firebase.initializeApp(firebaseConfig);

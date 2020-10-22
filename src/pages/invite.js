@@ -1,10 +1,48 @@
 import React from "react";
+import { useMutation } from "@apollo/client";
+import { ADD_ADMIN, ADD_GUEST } from "../Queys/mutations";
 import SimpleCard from "../components/UI/simpleContentCard";
 import { Formik, Form, Field } from "formik";
 import { AntInput } from "../HOC/CreateAntFields/CreateAntFields";
-import { isEmail, isRequired } from "../Helpers/FormValidation/FormValidation";
+import { isEmail } from "../Helpers/FormValidation/FormValidation";
 import { Button } from "antd";
 const Invite = (props) => {
+  let { type } = props;
+  let [addAdmin, { error: adminError, loading: adminLoading }] = useMutation(
+    ADD_ADMIN
+  );
+  let [addGuest, { error: guestError, loading: guestLoading }] = useMutation(
+    ADD_GUEST
+  );
+
+  const handleSubmitAdmin = async (values, actions) => {
+    const projectID = localStorage.getItem("project");
+    await addAdmin({
+      variables: {
+        admin_email: values.email,
+        id: projectID,
+      },
+    });
+    if (!adminError) {
+      actions.resetForm();
+    } else {
+      alert(adminError.message);
+    }
+  };
+  const handelSubmitGuest = async (values, actions) => {
+    const projectID = localStorage.getItem("project");
+    await addGuest({
+      variables: {
+        guest_email: values.email,
+        id: projectID,
+      },
+    });
+    if (!guestError) {
+      actions.resetForm();
+    } else {
+      alert(guestError.message);
+    }
+  };
   return (
     <div
       style={{
@@ -22,14 +60,16 @@ const Invite = (props) => {
       >
         <div className="header">
           <h1 style={{ paddingTop: "0px" }}>
-            Invite{props.type === "guest" ? " A Guest" : " Team Member"}{" "}
+            {props.type === "guest"
+              ? " Email A Link To A User"
+              : "Invite A Team Member"}{" "}
           </h1>
         </div>
         <Formik
           initialValues={{}}
-          onSubmit={async (values, actions) => {
-            alert(values.email);
-          }}
+          onSubmit={
+            props.type === "guest" ? handelSubmitGuest : handleSubmitAdmin
+          }
         >
           {(props) => (
             <>
@@ -47,7 +87,11 @@ const Invite = (props) => {
                   />
                 </section>
                 <div className="footer" style={{ paddingBottom: "0px" }}>
-                  <Button type="primary" htmlType="submit">
+                  <Button
+                    loading={type === "guest" ? guestLoading : adminLoading}
+                    type="primary"
+                    htmlType="submit"
+                  >
                     Submit
                   </Button>
                 </div>

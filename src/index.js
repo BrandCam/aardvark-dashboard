@@ -6,20 +6,32 @@ import { BrowserRouter as Router } from "react-router-dom";
 import {
   ApolloClient,
   InMemoryCache,
-  gql,
   createHttpLink,
+  split,
 } from "@apollo/client";
+import { getMainDefinition } from "@apollo/client/utilities";
 import { setContext } from "@apollo/client/link/context";
 import { ApolloProvider } from "@apollo/client";
 import { UserContextProvider } from "./HOC/Context/LoginContext";
+import { WebSocketLink } from "@apollo/client/link/ws";
+
+const wsLink = new WebSocketLink({
+  uri: `ws://${process.env.REACT_APP_GQL_SERVER}`,
+  options: {
+    reconnect: true,
+    connectionParams: {
+      authToken: localStorage.getItem("token"),
+    },
+  },
+});
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:5000/graphql",
+  uri: `http://${process.env.REACT_APP_GQL_SERVER}`,
 });
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem("token");
-  console.log(token);
+
   return {
     headers: {
       ...headers,
@@ -27,8 +39,21 @@ const authLink = setContext((_, { headers }) => {
     },
   };
 });
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
+    );
+  },
+  wsLink,
+  authLink.concat(httpLink)
+);
+
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: splitLink,
   cache: new InMemoryCache(),
 });
 

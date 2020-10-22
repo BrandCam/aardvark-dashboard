@@ -7,7 +7,18 @@ const Settings = (props) => {
   return (
     <PageWrap>
       <ContentCard>
-        <UserSettingsCard />
+        <div
+          style={{
+            width: "300px",
+            height: "400px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#0a141e",
+          }}
+        >
+          <UserSettingsCard />
+        </div>
       </ContentCard>
     </PageWrap>
   );

@@ -1,19 +1,11 @@
-import React from "react";
+import styled from "styled-components";
 
-const PageWrap = ({ children }) => {
-  return (
-    <section
-      style={{
-        display: "flex",
-        width: "95%",
-        height: "100%",
-        flexWrap: "wrap",
-        justifyContent: "space-around",
-      }}
-    >
-      {children}
-    </section>
-  );
-};
+const PageWrap = styled.section`
+  display: flex;
+  width: 95%;
+  height: 100%;
+  flex-wrap: wrap;
+  justify-content: space-around;
+`;
 
 export default PageWrap;

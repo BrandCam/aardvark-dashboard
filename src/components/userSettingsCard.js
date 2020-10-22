@@ -6,6 +6,7 @@ import { Button } from "antd";
 import { Formik, Form, Field } from "formik";
 import { AntInput } from "../HOC/CreateAntFields/CreateAntFields";
 import { isRequired } from "../Helpers/FormValidation/FormValidation";
+
 const UserSettingsCard = (props) => {
   let [editUser, { loading, error }] = useMutation(EDIT_USER, {
     update: (proxy, { data }) => {
@@ -22,14 +23,14 @@ const UserSettingsCard = (props) => {
 
   let user = useContext(UserContext);
   let [isEdditing, setIsEdditing] = useState(false);
-  let { state, dispatch } = user;
+  let { dispatch } = user;
   let initialValues = {};
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={async (values, actions) => {
         let { display_name } = values;
-        console.log(display_name);
+
         await editUser({ variables: { display_name } });
         if (!error) {
           setIsEdditing(!isEdditing);

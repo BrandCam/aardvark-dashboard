@@ -25,6 +25,7 @@ const CREATE_REPORT = gql`
     $description: String!
     $img_urls: [String]
     $video_url: String
+    $guest_creator: String
   ) {
     createReport(
       project_id: $project_id
@@ -34,6 +35,7 @@ const CREATE_REPORT = gql`
       description: $description
       img_urls: $img_urls
       video_url: $video_url
+      guest_creator: $guest_creator
     ) {
       id
       summary
@@ -48,7 +50,58 @@ const CREATE_REPORT = gql`
         display_name
         email
       }
+      guest_creator
       createdAt
+    }
+  }
+`;
+
+const CREATE_COMMENT = gql`
+  mutation createComment($project_id: ID!, $report_id: ID!, $content: String!) {
+    createComment(
+      project_id: $project_id
+      report_id: $report_id
+      content: $content
+    ) {
+      id
+      comments {
+        id
+        author {
+          id
+          display_name
+        }
+        content
+        createdAt
+      }
+    }
+  }
+`;
+
+const CREATE_CHAT_COMMENT = gql`
+  mutation createChatComment($project_id: ID!, $content: String!) {
+    createChatComment(project_id: $project_id, content: $content) {
+      id
+      author {
+        id
+        display_name
+      }
+      content
+      createdAt
+    }
+  }
+`;
+
+const CREATE_PROJECT = gql`
+  mutation createProject($title: String!) {
+    createProject(title: $title) {
+      id
+      title
+      owner {
+        email
+      }
+      admins {
+        email
+      }
     }
   }
 `;
@@ -84,6 +137,7 @@ const EDIT_REPORT = gql`
       summary: $summary
       severity: $severity
     ) {
+      id
       category
       description
       summary
@@ -94,4 +148,83 @@ const EDIT_REPORT = gql`
     }
   }
 `;
-export { CREATE_USER, CREATE_REPORT, EDIT_USER, EDIT_REPORT };
+
+const PICK_UP_REPORT = gql`
+  mutation pickUpReport($project_id: ID!, $id: ID!) {
+    pickUpReport(project_id: $project_id, id: $id) {
+      id
+      worked_by {
+        id
+        email
+        display_name
+      }
+    }
+  }
+`;
+
+const DROP_REPORT = gql`
+  mutation dropReport($project_id: ID!, $id: ID!) {
+    dropReport(project_id: $project_id, id: $id) {
+      id
+      worked_by {
+        id
+        email
+        display_name
+      }
+    }
+  }
+`;
+
+const EDIT_COMMENT = gql`
+  mutation updateComment(
+    $id: ID
+    $project_id: ID
+    $report_id: ID
+    $content: String
+  ) {
+    updateComment(
+      id: $id
+      project_id: $project_id
+      report_id: $report_id
+      content: $content
+    ) {
+      id
+      content
+    }
+  }
+`;
+
+const ADD_ADMIN = gql`
+  mutation addAdmin($admin_email: String!, $id: ID!) {
+    updateProject(admin_email: $admin_email, id: $id) {
+      id
+      admins {
+        email
+        display_name
+      }
+    }
+  }
+`;
+
+const ADD_GUEST = gql`
+  mutation addGuest($guest_email: String!, $id: ID!) {
+    updateProject(guest_email: $guest_email, id: $id) {
+      id
+      guests
+    }
+  }
+`;
+export {
+  CREATE_USER,
+  ADD_ADMIN,
+  ADD_GUEST,
+  CREATE_REPORT,
+  CREATE_COMMENT,
+  CREATE_CHAT_COMMENT,
+  CREATE_PROJECT,
+  EDIT_USER,
+  EDIT_REPORT,
+  PICK_UP_REPORT,
+  DROP_REPORT,
+  EDIT_COMMENT,
+};

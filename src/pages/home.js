@@ -1,7 +1,8 @@
 import React from "react";
-import ContentCard from "../components/contentCard";
 import PageWrap from "../components/UI/pageWrap";
-
+import DashBoardCard from "../components/homeCards.js/DashBoardCard/dashboardCard";
+import WorkingOnCard from "../components/homeCards.js/WorkingOnCard/workingOnCard";
+import SummaryCard from "../components/homeCards.js/SummaryCard/summaryCard";
 const Home = (props) => {
   return (
     <PageWrap>
@@ -14,15 +15,9 @@ const Home = (props) => {
           justifyContent: "space-around",
         }}
       >
-        <ContentCard animated>
-          <div style={{ width: "600px", height: "400px" }}></div>
-        </ContentCard>
-        <ContentCard animated>
-          <div style={{ width: "300px", height: "400px" }}></div>
-        </ContentCard>
-        <ContentCard animated>
-          <div style={{ width: "800px", height: "400px" }}></div>
-        </ContentCard>
+        <WorkingOnCard />
+        <SummaryCard />
+        <DashBoardCard />
       </div>
     </PageWrap>
   );

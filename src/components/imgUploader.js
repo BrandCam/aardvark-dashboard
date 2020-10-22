@@ -1,4 +1,4 @@
-import { Upload, Modal } from "antd";
+import { Upload } from "antd";
 import ReportModal from "../components/UI/reportModal";
 import { PictureOutlined } from "@ant-design/icons";
 import React from "react";
@@ -18,7 +18,7 @@ const PicturesWall = (props) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState([]);
+  let { fileList, setFileList } = props;
 
   const customRequest = async ({ file, onSuccess }) => {
     const storageRef = app.storage().ref();

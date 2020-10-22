@@ -9,20 +9,21 @@ import {
   Invite,
   Settings,
   CreateAccount,
+  GuestSubmit,
 } from "./pages/Index";
 import "./App.css";
-import { Route, Switch, Link, Router } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
+import PrivateRoute from "./HOC/Routing/privateRoute";
 import Sidebar from "./components/sidebar";
 import { UserContext } from "./HOC/Context/LoginContext";
-
-import { Button } from "antd";
 import { Layout } from "antd";
 import MsgSider from "./components/SideMsgs/MsgSider";
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Footer, Content } = Layout;
 
 function App() {
   let { state } = useContext(UserContext);
+  let { loggedIn, project } = state;
   return (
     <div style={{}} className="App">
       <Layout style={{ minHeight: "100vh" }}>
@@ -37,44 +38,57 @@ function App() {
             }}
           >
             <Switch>
-              <Route path="/projects">
+              <PrivateRoute path="/projects">
                 <SelectProject />
-              </Route>
-              <Route path="/reports/bugs">
+              </PrivateRoute>
+              <PrivateRoute path="/reports/bugs">
                 <Reports type="Bug" />
-              </Route>
-              <Route path="/reports/other">
+              </PrivateRoute>
+              <PrivateRoute path="/reports/other">
                 <Reports type="Suggestion" />
-              </Route>
-              <Route path="/project-board">
+              </PrivateRoute>
+              <PrivateRoute path="/project-board">
                 <Board />
-              </Route>
-              <Route path="/invite/team">
+              </PrivateRoute>
+              <PrivateRoute path="/invite/team">
                 <Invite type="team" />
-              </Route>
-              <Route path="/invite/guest">
+              </PrivateRoute>
+              <PrivateRoute path="/invite/guest">
                 <Invite type="guest" />
-              </Route>
-              <Route path="/create-report">
+              </PrivateRoute>
+              <PrivateRoute path="/create-report">
                 <CreateReport />
+              </PrivateRoute>
+              <Route path="/guest/create-report">
+                <GuestSubmit />
               </Route>
-              <Route path="/projects">
+              <PrivateRoute path="/projects">
                 <SelectProject />
-              </Route>
-              <Route path="/settings">
+              </PrivateRoute>
+              <PrivateRoute path="/settings">
                 <Settings />
-              </Route>
+              </PrivateRoute>
               <Route path="/new-user">
-                <CreateAccount />
+                {loggedIn ? <Redirect to="/" /> : <CreateAccount />}
               </Route>
-              <Route path="/">{state.loggedIn ? <Home /> : <SignIn />}</Route>
+              <Route path="/">
+                {loggedIn ? (
+                  project ? (
+                    <Home />
+                  ) : (
+                    <Redirect to="/projects" />
+                  )
+                ) : (
+                  <SignIn />
+                )}
+              </Route>
             </Switch>
           </Content>
-          <Footer style={{ backgroundColor: "#001427", color: "white" }}>
-            Footer
-          </Footer>
+          <Footer
+            style={{ backgroundColor: "#001427", color: "white" }}
+          ></Footer>
         </Layout>
-        <MsgSider />
+        {project ? <MsgSider /> : null}
       </Layout>
     </div>
   );

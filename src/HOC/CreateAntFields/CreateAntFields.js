@@ -1,6 +1,5 @@
 import React from "react";
 import { Form, Input, Select } from "antd";
-import CreateReport from "../../pages/createReport";
 const { Option } = Select;
 const Item = Form.Item;
 const { TextArea } = Input;

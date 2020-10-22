@@ -8,7 +8,6 @@ import {
   AntSelect,
 } from "../../HOC/CreateAntFields/CreateAntFields";
 import FormDrawer from "./edditReport.styles";
-import { PlusOutlined } from "@ant-design/icons";
 import { isRequired } from "../../Helpers/FormValidation/FormValidation";
 import { useMutation } from "@apollo/client";
 import { EDIT_REPORT } from "../../Queys/mutations";
@@ -20,6 +19,7 @@ const resolvedOptions = ["false", "true"];
 const EdditDrawer = ({ report, visable, setVisable }) => {
   let [updateReport, res] = useMutation(EDIT_REPORT);
   let [newImgs, setNewImgs] = useState([]);
+  let [fileList, setFileList] = useState([]);
   let {
     category,
     description,
@@ -54,18 +54,14 @@ const EdditDrawer = ({ report, visable, setVisable }) => {
             project_id,
           };
 
-          setTimeout(() => {
-            console.log(JSON.stringify(output, null, 2));
-            actions.setSubmitting(false);
-          }, 1000);
-
           await updateReport({
             variables: {
               ...output,
             },
           });
           if (!res.error) {
-            alert("It Worked");
+            setFileList([]);
+            setVisable();
           } else {
             alert(res.error.message);
           }
@@ -113,7 +109,6 @@ const EdditDrawer = ({ report, visable, setVisable }) => {
                     selectOptions={selectOptions}
                     validate={isRequired}
                     submitCount={props.submitCount}
-                    tokenseperators={[,]}
                     hasFeedback
                   />
                 </Col>
@@ -127,7 +122,6 @@ const EdditDrawer = ({ report, visable, setVisable }) => {
                     selectOptions={severityOptions}
                     validate={isRequired}
                     submitCount={props.submitCount}
-                    tokenseperators={[,]}
                     hasFeedback
                   />
                 </Col>
@@ -185,12 +179,16 @@ const EdditDrawer = ({ report, visable, setVisable }) => {
                     selectOptions={resolvedOptions}
                     validate={isRequired}
                     submitCount={props.submitCount}
-                    tokenseperators={[,]}
                     hasFeedback
                   />
                 </Col>
                 <Col span={12}>
-                  <PicturesWall imgUrls={newImgs} setImgUrls={setNewImgs} />
+                  <PicturesWall
+                    fileList={fileList}
+                    setFileList={setFileList}
+                    imgUrls={newImgs}
+                    setImgUrls={setNewImgs}
+                  />
                 </Col>
               </Row>
             </FormDrawer>

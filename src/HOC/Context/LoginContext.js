@@ -1,5 +1,5 @@
 import React, { createContext, useReducer, useEffect } from "react";
-import { useJwt, decodeToken } from "react-jwt";
+import { decodeToken } from "react-jwt";
 
 const UserContext = createContext();
 const token = localStorage.getItem("token");
@@ -18,10 +18,10 @@ const actionTypes = {
   SET_PROJECT: "SET_PROJECT",
   SET_USER: "SET_USER",
   SET_TOKEN: "SET_TOKEN",
+  LOG_OUT: "LOG_OUT",
 };
 
 const reducer = (state, action) => {
-  console.log("CALLED with type:", action.type);
   switch (action.type) {
     case "SET_TOKEN":
       return { ...state, token: action.payload };
@@ -38,6 +38,18 @@ const reducer = (state, action) => {
         email: action.payload.email,
         display_name: action.payload.display_name,
       };
+    case "LOG_OUT": {
+      localStorage.clear();
+      return {
+        loggedIn: false,
+        token: null,
+        project: null,
+        id: null,
+        email: null,
+        display_name: null,
+      };
+    }
+
     default:
       return state;
   }
@@ -50,8 +62,6 @@ const UserContextProvider = ({ children }) => {
 
   useEffect(() => {
     const decodedToken = decodeToken(state.token);
-    console.log(decodedToken);
-    console.log("effect RAN");
     if (decodedToken !== null) {
       let { id, email, display_name } = decodedToken;
       dispatch({

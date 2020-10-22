@@ -11,7 +11,54 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body::-webkit-scrollbar-track {
+  background: #141414;
+}
+
+body::-webkit-scrollbar {
+  width: 15px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #33bbf1;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+/* Fonts */
+
+@font-face {
+  font-family: "digital-dream";
+  src: url("./res/digital-dream.narrow.ttf");
+}
+
+/*Pop-over styles*/
+.ant-popover-inner {
+  color: white;
+  background-color: #fa541c;
+}
+/* Head */
+.ant-popover-title {
+  color: white;
+  font-size: 1.4em;
+  border-bottom: none;
+}
+/* Body */
+.ant-popover-inner-content {
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ant-popover-inner-content p {
+  margin: 0px;
+  font-size: 1.4em;
+}
+/* Arrow */
+.ant-popover-placement-top > .ant-popover-content > .ant-popover-arrow {
+  border-right-color: #fa541c;
+  border-bottom-color: #fa541c;
 }

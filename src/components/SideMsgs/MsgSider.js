@@ -1,10 +1,40 @@
-import React, { useState } from "react";
-import { Button, Layout } from "antd";
-import { MessageTwoTone, MinusOutlined } from "@ant-design/icons";
+import React, { useState, useContext, useEffect } from "react";
+import { UserContext } from "../../HOC/Context/LoginContext";
+import { useQuery } from "@apollo/client";
+import { GET_CHAT } from "../../Queys/fetch";
+import { CHAT_COMMENT_ADDED } from "../../Queys/subscriptions";
+import { MessageTwoTone } from "@ant-design/icons";
+import ChatBody from "../chatBox/chatBody";
+import ChatDrawer from "../chatBox/chatDrawer";
+import SideMsgInput from "./sideMsgInput";
 
-const { Sider } = Layout;
 const MsgSider = (props) => {
+  let { state } = useContext(UserContext);
+  let { data, subscribeToMore, refetch } = useQuery(GET_CHAT, {
+    variables: { project_id: state.project },
+  });
   let [collapsed, setCollapsed] = useState(true);
+
+  useEffect(() => {}, []);
+  let handelOpen = () => {
+    setCollapsed(false);
+    refetch();
+  };
+
+  let handleSubscribe = () => {
+    return subscribeToMore({
+      document: CHAT_COMMENT_ADDED,
+      variables: { project_id: state.project },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+
+        const newComment = subscriptionData.data.chatCommentAdded;
+
+        return { ...prev, getChat: [...prev.getChat, newComment] };
+      },
+    });
+  };
+
   return (
     <aside
       collapsible
@@ -13,30 +43,43 @@ const MsgSider = (props) => {
         position: "fixed",
         right: 0,
         display: "flex",
-        width: `${collapsed ? "" : "20%"}`,
-        height: `${collapsed ? "" : "100vh"}`,
         flexWrap: "wrap",
         justifyContent: "space-around",
-        backgroundColor: `${collapsed ? "" : "#eee"}`,
         borderRadius: "10px",
       }}
     >
-      {collapsed ? "" : "open"}
+      <ChatDrawer
+        destroyOnClose={true}
+        width="400px"
+        height="100%"
+        title="Group Chat"
+        mask={false}
+        placement="right"
+        onClose={() => {
+          setCollapsed(true);
+        }}
+        visible={!collapsed}
+        key="bottom"
+        footer={<SideMsgInput />}
+      >
+        {data ? (
+          <ChatBody
+            subscribe={handleSubscribe}
+            comments={data.getChat}
+          ></ChatBody>
+        ) : null}
+      </ChatDrawer>
 
       {collapsed ? (
         <MessageTwoTone
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={handelOpen}
           style={{
             position: "sticky",
             fontSize: "48px",
             backgroundColor: "#001427",
           }}
         />
-      ) : (
-        <Button onClick={() => setCollapsed(!collapsed)}>
-          <MinusOutlined />
-        </Button>
-      )}
+      ) : null}
     </aside>
   );
 };

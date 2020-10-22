@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useLazyQuery } from "@apollo/client";
 import { LOG_IN } from "../Queys/fetch";
 import { UserContext, actionTypes } from "../HOC/Context/LoginContext";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
@@ -28,13 +28,10 @@ const LogForm = styled(Form)`
 
 const LoginForm = () => {
   let user = useContext(UserContext);
-  let history = useHistory();
-  const [logIn, { called, loading, data, error }] = useLazyQuery(LOG_IN);
+  const [logIn, { called, loading, data }] = useLazyQuery(LOG_IN);
   let { dispatch } = user;
   const onFinish = ({ email, password }) => {
-    console.log("Received values of form: ", { password, email });
     logIn({ variables: { password, email } });
-    console.log(data, loading, called, error);
   };
 
   useEffect(() => {
@@ -47,8 +44,7 @@ const LoginForm = () => {
       });
       dispatch({ type: actionTypes.SET_LOGIN, payload: true });
     }
-    console.log("called from login");
-  }, [called, loading]);
+  }, [called, loading, data, dispatch]);
 
   return (
     <LogForm
@@ -104,9 +100,9 @@ const LoginForm = () => {
           </Checkbox>
         </Form.Item>
 
-        <a className="login-form-forgot" style={{ float: "right" }} href="">
+        {/* <a className="login-form-forgot" style={{ float: "right" }} href="">
           Forgot password
-        </a>
+        </a> */}
       </Form.Item>
 
       <Form.Item style={{ color: "white" }}>

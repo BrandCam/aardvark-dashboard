@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER } from "../Queys/mutations";
 import { Link, useHistory } from "react-router-dom";
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { UserContext, actionTypes } from "../HOC/Context/LoginContext";
 

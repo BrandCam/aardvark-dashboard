@@ -15,10 +15,16 @@ const ReportWrap = styled.div`
   box-shadow: 0 8px 6px -6px black;
 
   .type {
+    display: inline flex;
+    justify-content: center;
+    align-items: center;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
-    min-width: 80px;
+
     padding: 5px;
+    p {
+      all: unset;
+    }
   }
 
   .description {
@@ -29,7 +35,7 @@ const ReportWrap = styled.div`
 
     .severity {
       font-size: 1rem;
-
+      margin-right: 10px;
       display: flex;
       flex-direction: row;
       margin-left: 15px;
@@ -37,7 +43,7 @@ const ReportWrap = styled.div`
       padding-right: 10px;
     }
     p {
-      height: 90%;
+      margin-right: 10px;
       margin-bottom: 0;
       flex-grow: 2;
       color: #fff;

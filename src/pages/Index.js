@@ -7,7 +7,7 @@ import Board from "./board";
 import Invite from "./invite";
 import Settings from "./settings";
 import CreateAccount from "./createAccount";
-
+import GuestSubmit from "./guestSubmit";
 export {
   Home,
   CreateReport,
@@ -18,4 +18,5 @@ export {
   Invite,
   Settings,
   CreateAccount,
+  GuestSubmit,
 };

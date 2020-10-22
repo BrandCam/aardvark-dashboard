@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { decodeToken } from "react-jwt";
 import { useMutation } from "@apollo/client";
 import { CREATE_REPORT } from "../Queys/mutations";
 import styled from "styled-components";
@@ -37,37 +38,66 @@ const FormFields = styled.section`
 
 const ReportForm = (props) => {
   let [imgUrls, setImgUrls] = useState([]);
+  const [fileList, setFileList] = useState([]);
   let [createReport, res] = useMutation(CREATE_REPORT);
   let { loading, error } = res;
 
+  const normalSubmit = async (values, actions) => {
+    const projectID = localStorage.getItem("project");
+    await createReport({
+      variables: {
+        project_id: projectID,
+        severity: "New",
+        category: values.type,
+        summary: values.description,
+        description: values.details,
+        video_url: values.videoUrl,
+        img_urls: imgUrls,
+      },
+    });
+    if (!error) {
+      actions.resetForm();
+      setImgUrls([]);
+      setFileList([]);
+    } else {
+      alert(error.message);
+    }
+  };
+
+  //set token from query param if guest
+  useEffect(() => {
+    if (props.query) {
+      localStorage.setItem("token", `Bearer ${props.query.get("token")}`);
+    }
+  }, [props.query]);
+
+  const guestSubmit = async (values, actions) => {
+    const decodedToken = decodeToken(props.query.get("token"));
+
+    await createReport({
+      variables: {
+        project_id: decodedToken.project_id,
+        severity: "New",
+        category: values.type,
+        summary: values.description,
+        description: values.details,
+        video_url: values.videoUrl,
+        img_urls: imgUrls,
+        guest_creator: decodedToken.email,
+      },
+    });
+    if (!error) {
+      actions.resetForm();
+      setImgUrls([]);
+      setFileList([]);
+    } else {
+      alert(error.message);
+    }
+  };
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={async (values, actions) => {
-        // const output = { ...values, imgUrls: imgUrls };
-        //
-        // setTimeout(() => {
-        //   alert(JSON.stringify(output, null, 2));
-        //   actions.setSubmitting(false);
-        // }, 1000);
-        const projectID = localStorage.getItem("project");
-        await createReport({
-          variables: {
-            project_id: projectID,
-            severity: "New",
-            category: values.type,
-            summary: values.description,
-            description: values.details,
-            video_url: values.videoUrl,
-            img_urls: imgUrls,
-          },
-        });
-        if (!error) {
-          alert("It Worked");
-        } else {
-          alert(error.message);
-        }
-      }}
+      onSubmit={props.isGuest ? guestSubmit : normalSubmit}
     >
       {(props) => (
         <SimpleCard>
@@ -85,7 +115,6 @@ const ReportForm = (props) => {
                 selectOptions={selectOptions}
                 validate={isRequired}
                 submitCount={props.submitCount}
-                tokenseperators={[,]}
                 hasFeedback
               />
               <Field
@@ -111,6 +140,8 @@ const ReportForm = (props) => {
               />
 
               <PicturesWall
+                fileList={fileList}
+                setFileList={setFileList}
                 name="photos"
                 imgUrls={imgUrls}
                 setImgUrls={setImgUrls}
