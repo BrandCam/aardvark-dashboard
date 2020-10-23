@@ -16,10 +16,8 @@ import { UserContextProvider } from "./HOC/Context/LoginContext";
 import { WebSocketLink } from "@apollo/client/link/ws";
 
 const wsLink = new WebSocketLink({
-  uri:
-    process.env.NODE_ENV === "production"
-      ? process.env.REACT_APP_WS_SERVER
-      : "ws://localhost:5000/graphql",
+  // uri: process.env.REACT_APP_WS_SERVER,
+  uri: "wss://aardvark-backend.herokuapp.com/subscriptions",
   options: {
     reconnect: true,
     connectionParams: {
@@ -29,10 +27,8 @@ const wsLink = new WebSocketLink({
 });
 
 const httpLink = createHttpLink({
-  uri:
-    process.env.NODE_ENV === "production"
-      ? process.env.REACT_APP_GQL_SERVER
-      : " http://localhost:5000/graphql",
+  // uri: process.env.REACT_APP_GQL_SERVER,
+  uri: "https://aardvark-backend.herokuapp.com/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
