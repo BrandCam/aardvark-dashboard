@@ -7,10 +7,11 @@ import { MessageTwoTone } from "@ant-design/icons";
 import ChatBody from "../chatBox/chatBody";
 import ChatDrawer from "../chatBox/chatDrawer";
 import SideMsgInput from "./sideMsgInput";
+import errorCb from "../../Helpers/errorPopup";
 
 const MsgSider = (props) => {
   let { state } = useContext(UserContext);
-  let { data, subscribeToMore, refetch } = useQuery(GET_CHAT, {
+  let { data, subscribeToMore, refetch, error } = useQuery(GET_CHAT, {
     variables: { project_id: state.project },
   });
   let [collapsed, setCollapsed] = useState(true);
@@ -20,6 +21,12 @@ const MsgSider = (props) => {
     setCollapsed(false);
     refetch();
   };
+
+  useEffect(() => {
+    if (error) {
+      errorCb(error);
+    }
+  }, [error]);
 
   let handleSubscribe = () => {
     return subscribeToMore({

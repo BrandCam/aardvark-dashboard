@@ -6,6 +6,7 @@ import { UserContext, actionTypes } from "../HOC/Context/LoginContext";
 import { Link } from "react-router-dom";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import errorCb from "../Helpers/errorPopup";
 
 const LogForm = styled(Form)`
   width: 400px;
@@ -28,10 +29,13 @@ const LogForm = styled(Form)`
 
 const LoginForm = () => {
   let user = useContext(UserContext);
-  const [logIn, { called, loading, data }] = useLazyQuery(LOG_IN);
+  const [logIn, { called, loading, data, error }] = useLazyQuery(LOG_IN);
   let { dispatch } = user;
-  const onFinish = ({ email, password }) => {
-    logIn({ variables: { password, email } });
+  const onFinish = async ({ email, password }) => {
+    await logIn({ variables: { password, email } });
+    if (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -45,6 +49,12 @@ const LoginForm = () => {
       dispatch({ type: actionTypes.SET_LOGIN, payload: true });
     }
   }, [called, loading, data, dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      errorCb(error);
+    }
+  }, [error]);
 
   return (
     <LogForm
@@ -99,7 +109,17 @@ const LoginForm = () => {
             Remember me
           </Checkbox>
         </Form.Item>
-
+        <Form.Item style={{ color: "white" }}>
+          <Button
+            loading={loading}
+            type="primary"
+            htmlType="submit"
+            className="login-form-button"
+            style={{ width: "75%" }}
+          >
+            Log in
+          </Button>
+        </Form.Item>
         {/* <a className="login-form-forgot" style={{ float: "right" }} href="">
           Forgot password
         </a> */}
@@ -107,12 +127,16 @@ const LoginForm = () => {
 
       <Form.Item style={{ color: "white" }}>
         <Button
-          type="primary"
-          htmlType="submit"
+          loading={loading}
+          type="danger"
+          ghost
           className="login-form-button"
-          style={{ width: "100%" }}
+          style={{ width: "100%", marginTop: "-35px", marginBottom: "10px" }}
+          onClick={() => {
+            onFinish({ email: "test10@test.com", password: "password" });
+          }}
         >
-          Log in
+          Click Here To View A Pre-Hidrated Account
         </Button>
         Or <Link to="/new-user">register now!</Link>
       </Form.Item>

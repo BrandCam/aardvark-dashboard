@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PicturesWall from "../imgUploader";
 import { Button, Col, Row } from "antd";
 import { Formik, Form, Field } from "formik";
@@ -11,6 +11,7 @@ import FormDrawer from "./edditReport.styles";
 import { isRequired } from "../../Helpers/FormValidation/FormValidation";
 import { useMutation } from "@apollo/client";
 import { EDIT_REPORT } from "../../Queys/mutations";
+import errorCb from "../../Helpers/errorPopup";
 
 const selectOptions = ["Bug", "Suggestion"];
 const severityOptions = ["New", "Minor", "Major", "Breaking"];
@@ -20,6 +21,7 @@ const EdditDrawer = ({ report, visable, setVisable }) => {
   let [updateReport, res] = useMutation(EDIT_REPORT);
   let [newImgs, setNewImgs] = useState([]);
   let [fileList, setFileList] = useState([]);
+  let { error } = res;
   let {
     category,
     description,
@@ -30,6 +32,7 @@ const EdditDrawer = ({ report, visable, setVisable }) => {
     video_url,
     img_urls,
   } = report;
+
   const initialValues = {
     category,
     description,
@@ -40,6 +43,13 @@ const EdditDrawer = ({ report, visable, setVisable }) => {
     video_url,
     img_urls: [...img_urls],
   };
+
+  useEffect(() => {
+    if (error) {
+      errorCb(error);
+    }
+  }, [error]);
+
   return (
     <>
       <Formik
@@ -63,7 +73,7 @@ const EdditDrawer = ({ report, visable, setVisable }) => {
             setFileList([]);
             setVisable();
           } else {
-            alert(res.error.message);
+            console.log(res.error.message);
           }
         }}
       >

@@ -13,6 +13,7 @@ import {
 } from "../HOC/CreateAntFields/CreateAntFields";
 import { isRequired } from "../Helpers/FormValidation/FormValidation";
 import SimpleCard from "../components/UI/simpleContentCard";
+import errorCb from "../Helpers/errorPopup";
 
 const initialValues = {};
 const selectOptions = ["Bug", "Suggestion"];
@@ -37,6 +38,7 @@ const FormFields = styled.section`
 `;
 
 const ReportForm = (props) => {
+  let [decodedToken, setDecodedtoken] = useState(false);
   let [imgUrls, setImgUrls] = useState([]);
   const [fileList, setFileList] = useState([]);
   let [createReport, res] = useMutation(CREATE_REPORT);
@@ -64,16 +66,7 @@ const ReportForm = (props) => {
     }
   };
 
-  //set token from query param if guest
-  useEffect(() => {
-    if (props.query) {
-      localStorage.setItem("token", `Bearer ${props.query.get("token")}`);
-    }
-  }, [props.query]);
-
   const guestSubmit = async (values, actions) => {
-    const decodedToken = decodeToken(props.query.get("token"));
-
     await createReport({
       variables: {
         project_id: decodedToken.project_id,
@@ -94,6 +87,21 @@ const ReportForm = (props) => {
       alert(error.message);
     }
   };
+
+  //set token from query param if guest
+  useEffect(() => {
+    if (props.query) {
+      localStorage.setItem("guestToken", `Bearer ${props.query.get("token")}`);
+      setDecodedtoken(decodeToken(props.query.get("token")));
+    }
+  }, [props.query]);
+
+  useEffect(() => {
+    if (error) {
+      errorCb(error);
+    }
+  }, [error]);
+
   return (
     <Formik
       initialValues={initialValues}
@@ -102,7 +110,11 @@ const ReportForm = (props) => {
       {(props) => (
         <SimpleCard>
           <div className="header">
-            <h1>Create Report</h1>
+            <h1>
+              {decodedToken
+                ? "Please submit as detailed a report as possible. Your feedback is appreciated."
+                : "Create Report"}
+            </h1>
           </div>
           <Form onSubmit={props.handleSubmit}>
             <FormFields className="content">

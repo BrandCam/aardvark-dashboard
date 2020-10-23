@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { UserContext } from "../../HOC/Context/LoginContext";
 import { Spin } from "antd";
 import { Formik, Form, Field } from "formik";
@@ -7,6 +7,7 @@ import { AntTextArea } from "../../HOC/CreateAntFields/CreateAntFields";
 import { SendOutlined } from "@ant-design/icons";
 import { useMutation } from "@apollo/client";
 import { CREATE_CHAT_COMMENT } from "../../Queys/mutations";
+import errorCb from "../../Helpers/errorPopup";
 
 const ChatForm = styled(Form)`
   display: flex;
@@ -53,6 +54,12 @@ const ChatBoxInput = (props) => {
   let [createComment, res] = useMutation(CREATE_CHAT_COMMENT);
   let { loading, error } = res;
 
+  useEffect(() => {
+    if (error) {
+      errorCb(error);
+    }
+  }, [error]);
+
   return (
     <Formik
       initialValues={{}}
@@ -68,7 +75,7 @@ const ChatBoxInput = (props) => {
           if (!error) {
             actions.resetForm();
           } else {
-            alert(error.message);
+            console.log(error.message);
           }
         }
       }}

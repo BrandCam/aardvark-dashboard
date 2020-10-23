@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { EDIT_USER } from "../Queys/mutations";
 import { UserContext, actionTypes } from "../HOC/Context/LoginContext";
@@ -6,6 +6,7 @@ import { Button } from "antd";
 import { Formik, Form, Field } from "formik";
 import { AntInput } from "../HOC/CreateAntFields/CreateAntFields";
 import { isRequired } from "../Helpers/FormValidation/FormValidation";
+import errorCb from "../Helpers/errorPopup";
 
 const UserSettingsCard = (props) => {
   let [editUser, { loading, error }] = useMutation(EDIT_USER, {
@@ -25,6 +26,13 @@ const UserSettingsCard = (props) => {
   let [isEdditing, setIsEdditing] = useState(false);
   let { dispatch } = user;
   let initialValues = {};
+
+  useEffect(() => {
+    if (error) {
+      errorCb(error);
+    }
+  }, [error]);
+
   return (
     <Formik
       initialValues={initialValues}

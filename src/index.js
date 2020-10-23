@@ -16,7 +16,10 @@ import { UserContextProvider } from "./HOC/Context/LoginContext";
 import { WebSocketLink } from "@apollo/client/link/ws";
 
 const wsLink = new WebSocketLink({
-  uri: `ws://${process.env.REACT_APP_GQL_SERVER}`,
+  uri:
+    process.env.NODE_ENV !== "production"
+      ? process.env.REACT_APP_WS_SERVER
+      : "ws://localhost:5000/graphql",
   options: {
     reconnect: true,
     connectionParams: {
@@ -26,16 +29,19 @@ const wsLink = new WebSocketLink({
 });
 
 const httpLink = createHttpLink({
-  uri: `http://${process.env.REACT_APP_GQL_SERVER}`,
+  uri:
+    process.env.NODE_ENV !== "production"
+      ? process.env.REACT_APP_GQL_SERVER
+      : " http://localhost:5000/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem("token");
-
+  const guestToken = localStorage.getItem("guestToken");
   return {
     headers: {
       ...headers,
-      authorization: token ? token : "",
+      authorization: token ? token : guestToken ? guestToken : "",
     },
   };
 });

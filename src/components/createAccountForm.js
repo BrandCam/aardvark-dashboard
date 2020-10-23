@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER } from "../Queys/mutations";
@@ -6,6 +6,7 @@ import { Link, useHistory } from "react-router-dom";
 import { Form, Input, Button } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { UserContext, actionTypes } from "../HOC/Context/LoginContext";
+import errorCb from "../Helpers/errorPopup";
 
 const LogForm = styled(Form)`
   width: 400px;
@@ -43,18 +44,23 @@ const CreateAccountForm = () => {
         payload: localStorage.getItem("token"),
       });
       dispatch({ type: actionTypes.SET_LOGIN, payload: true });
+      history.push("/");
     },
+    errorPolicy: "all",
   });
   let { loading, error } = res;
   let { dispatch } = user;
   const onFinish = async ({ email, password, display_name }) => {
-    await createUser({ variables: { email, password, display_name } });
-    if (!error) {
-      history.push("/");
-    }
+    await createUser({
+      variables: { email, password, display_name },
+    });
   };
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error! {error.message}</div>;
+
+  useEffect(() => {
+    if (error) {
+      errorCb(error);
+    }
+  }, [error]);
 
   return (
     <LogForm
@@ -108,6 +114,10 @@ const CreateAccountForm = () => {
             required: true,
             message: "Please input your Password!",
           },
+          {
+            min: 6,
+            message: "Passwords must be atleast 6 characters long.",
+          },
         ]}
       >
         <Input
@@ -123,6 +133,7 @@ const CreateAccountForm = () => {
 
       <Form.Item style={{ color: "white" }}>
         <Button
+          loading={loading}
           type="primary"
           htmlType="submit"
           className="login-form-button"

@@ -62,3 +62,21 @@ code {
   border-right-color: #fa541c;
   border-bottom-color: #fa541c;
 }
+/* END pop-over */
+/* Error-popup styles */
+.error-pop .ant-message-notice-content {
+  background-color: #242424;
+  color: white;
+  padding: 0px;
+}
+/* Text span */
+.error-pop .error-text {
+  padding: 10px 4px 10px 16px;
+}
+
+/* Close Button */
+.error-pop .ant-message-notice-content .error-close {
+  align-self: flex-start;
+  cursor: pointer;
+  margin: 2px 2px 0px 0px;
+}

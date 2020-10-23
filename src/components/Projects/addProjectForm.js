@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { UserContext, actionTypes } from "../../HOC/Context/LoginContext";
-
 import styled from "styled-components";
 import { CloseCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Formik, Form, Field } from "formik";
@@ -9,6 +8,7 @@ import { GET_USERS_PROJECTS } from "../../Queys/fetch";
 import { CREATE_PROJECT } from "../../Queys/mutations";
 import { AntInput } from "../../HOC/CreateAntFields/CreateAntFields";
 import { isRequired } from "../../Helpers/FormValidation/FormValidation";
+import errorCb from "../../Helpers/errorPopup";
 
 const MyForm = styled(Form)`
   h2 {
@@ -56,6 +56,13 @@ const AddProjectForm = ({ cancel, isEdditing }) => {
       },
     ],
   });
+
+  useEffect(() => {
+    if (error) {
+      errorCb(error);
+    }
+  }, [error]);
+
   return (
     <>
       <Formik

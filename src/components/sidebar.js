@@ -16,6 +16,7 @@ import {
 import styled from "styled-components";
 import { Link, useLocation, useHistory } from "react-router-dom";
 import LogoIcon, { Myimg } from "./UI/logo";
+import errorCb from "../Helpers/errorPopup";
 
 const Logo = styled.div`
   position: relative;
@@ -61,7 +62,7 @@ const { SubMenu, Item } = Menu;
 const Sidebar = (props) => {
   let [members, setMembers] = useState([]);
   let { state, dispatch } = useContext(UserContext);
-  let { loggedIn, project, email } = state;
+  let { loggedIn, project, email, error } = state;
   let { data, refetch, networkStatus } = useQuery(GET_PROJECT_MEMBERS, {
     variables: { id: project },
     notifyOnNetworkStatusChange: true,
@@ -79,6 +80,12 @@ const Sidebar = (props) => {
       setMembers(members.filter((memb) => memb.email !== email));
     }
   }, [data, email]);
+
+  useEffect(() => {
+    if (error) {
+      errorCb(error);
+    }
+  }, [error]);
 
   if (!loggedIn) {
     return null;

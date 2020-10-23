@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import { UserContext } from "../../../HOC/Context/LoginContext";
 import { useQuery, useMutation } from "@apollo/client";
@@ -12,6 +12,7 @@ import EdditDrawer from "../../Reports/edditReport";
 import PlaceHolder from "../../UI/cardPlaceHolder";
 import Loader from "../../UI/loader";
 import IdShorten from "../../../Helpers/shortenId";
+import errorCb from "../../../Helpers/errorPopup";
 
 const { TabPane } = Tabs;
 
@@ -75,7 +76,15 @@ const WorkingOnCard = (props) => {
     variables: { project_id: project },
     fetchPolicy: "cache-and-network",
   });
-  let [drop, { loading: isDropping }] = useMutation(DROP_REPORT);
+  let [drop, { loading: isDropping, error: dropError }] = useMutation(
+    DROP_REPORT
+  );
+
+  useEffect(() => {
+    if (dropError) {
+      errorCb(dropError);
+    }
+  }, [dropError]);
 
   if (loading)
     return (

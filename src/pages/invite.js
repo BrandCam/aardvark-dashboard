@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_ADMIN, ADD_GUEST } from "../Queys/mutations";
 import SimpleCard from "../components/UI/simpleContentCard";
@@ -6,6 +6,8 @@ import { Formik, Form, Field } from "formik";
 import { AntInput } from "../HOC/CreateAntFields/CreateAntFields";
 import { isEmail } from "../Helpers/FormValidation/FormValidation";
 import { Button } from "antd";
+import errorCb from "../Helpers/errorPopup";
+
 const Invite = (props) => {
   let { type } = props;
   let [addAdmin, { error: adminError, loading: adminLoading }] = useMutation(
@@ -25,10 +27,9 @@ const Invite = (props) => {
     });
     if (!adminError) {
       actions.resetForm();
-    } else {
-      alert(adminError.message);
     }
   };
+
   const handelSubmitGuest = async (values, actions) => {
     const projectID = localStorage.getItem("project");
     await addGuest({
@@ -39,10 +40,18 @@ const Invite = (props) => {
     });
     if (!guestError) {
       actions.resetForm();
-    } else {
-      alert(guestError.message);
     }
   };
+
+  useEffect(() => {
+    if (guestError) {
+      errorCb(guestError);
+    }
+    if (adminError) {
+      errorCb(adminError);
+    }
+  }, [guestError, adminError]);
+
   return (
     <div
       style={{
