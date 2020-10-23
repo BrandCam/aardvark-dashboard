@@ -17,7 +17,7 @@ import { WebSocketLink } from "@apollo/client/link/ws";
 
 const wsLink = new WebSocketLink({
   uri:
-    process.env.NODE_ENV !== "production"
+    process.env.NODE_ENV === "production"
       ? process.env.REACT_APP_WS_SERVER
       : "ws://localhost:5000/graphql",
   options: {
@@ -30,7 +30,7 @@ const wsLink = new WebSocketLink({
 
 const httpLink = createHttpLink({
   uri:
-    process.env.NODE_ENV !== "production"
+    process.env.NODE_ENV === "production"
       ? process.env.REACT_APP_GQL_SERVER
       : " http://localhost:5000/graphql",
 });
