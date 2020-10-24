@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { GET_USERS_PROJECTS } from "../Queys/fetch";
 import { UserContext } from "../HOC/Context/LoginContext";
 import ProjectList from "../components/Projects/projectList";
+import { Helmet } from "react-helmet";
 
 const SelectProject = (props) => {
   let { state } = useContext(UserContext);
@@ -15,6 +16,10 @@ const SelectProject = (props) => {
   if (error) return <p>{error.message}</p>;
   return (
     <>
+      <Helmet>
+        <meta name="description" content="Project selection" />
+        <title>Aardvark | Project Select</title>
+      </Helmet>
       <ProjectList
         type="Owned"
         projects={data.getUser.projects.filter(

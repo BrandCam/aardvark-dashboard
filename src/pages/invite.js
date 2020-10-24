@@ -7,6 +7,7 @@ import { AntInput } from "../HOC/CreateAntFields/CreateAntFields";
 import { isEmail } from "../Helpers/FormValidation/FormValidation";
 import { Button } from "antd";
 import errorCb from "../Helpers/errorPopup";
+import { Helmet } from "react-helmet";
 
 const Invite = (props) => {
   let { type } = props;
@@ -53,63 +54,72 @@ const Invite = (props) => {
   }, [guestError, adminError]);
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <SimpleCard
+    <>
+      <Helmet>
+        <meta name="description" content={`${props.type} Invite`} />
+        <title>
+          Aardvark | {props.type.charAt(0).toUpperCase() + props.type.slice(1)}{" "}
+          Invite
+        </title>
+      </Helmet>
+      <div
         style={{
           width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <div className="header">
-          <h1 style={{ paddingTop: "0px" }}>
-            {props.type === "guest"
-              ? " Email A Link To A User"
-              : "Invite A Team Member"}{" "}
-          </h1>
-        </div>
-        <Formik
-          initialValues={{}}
-          onSubmit={
-            props.type === "guest" ? handelSubmitGuest : handleSubmitAdmin
-          }
+        <SimpleCard
+          style={{
+            width: "100%",
+          }}
         >
-          {(props) => (
-            <>
-              <Form onSubmit={props.handleSubmit}>
-                <section className="content">
-                  <Field
-                    component={AntInput}
-                    name="email"
-                    type="email"
-                    label="email"
-                    placeholder="Please input a valid Email"
-                    validate={isEmail}
-                    submitCount={props.submitCount}
-                    hasFeedback
-                  />
-                </section>
-                <div className="footer" style={{ paddingBottom: "0px" }}>
-                  <Button
-                    loading={type === "guest" ? guestLoading : adminLoading}
-                    type="primary"
-                    htmlType="submit"
-                  >
-                    Submit
-                  </Button>
-                </div>
-              </Form>
-            </>
-          )}
-        </Formik>
-      </SimpleCard>
-    </div>
+          <div className="header">
+            <h1 style={{ paddingTop: "0px" }}>
+              {props.type === "guest"
+                ? " Email A Link To A User"
+                : "Invite A Team Member"}{" "}
+            </h1>
+          </div>
+          <Formik
+            initialValues={{}}
+            onSubmit={
+              props.type === "guest" ? handelSubmitGuest : handleSubmitAdmin
+            }
+          >
+            {(props) => (
+              <>
+                <Form onSubmit={props.handleSubmit}>
+                  <section className="content">
+                    <Field
+                      component={AntInput}
+                      name="email"
+                      type="email"
+                      label="email"
+                      placeholder="Please input a valid Email"
+                      validate={isEmail}
+                      submitCount={props.submitCount}
+                      hasFeedback
+                    />
+                  </section>
+                  <div className="footer" style={{ paddingBottom: "0px" }}>
+                    <Button
+                      loading={type === "guest" ? guestLoading : adminLoading}
+                      type="primary"
+                      htmlType="submit"
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                </Form>
+              </>
+            )}
+          </Formik>
+        </SimpleCard>
+      </div>
+    </>
   );
 };
 

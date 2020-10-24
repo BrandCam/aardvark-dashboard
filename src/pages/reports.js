@@ -4,6 +4,7 @@ import { GET_PROJECT_REPORTS } from "../Queys/fetch";
 import { UserContext } from "../HOC/Context/LoginContext";
 import ReportsSection from "../components/Reports/reports";
 import PageWrap from "../components/UI/pageWrap";
+import { Helmet } from "react-helmet";
 
 const Reports = ({ type }) => {
   let user = useContext(UserContext);
@@ -40,23 +41,29 @@ const Reports = ({ type }) => {
     return <h1 style={{ color: "white" }}>{error.message}</h1>;
   }
   return (
-    <PageWrap style={{ flexWrap: "wrap-reverse" }}>
-      <ReportsSection
-        loadingReports={loading}
-        setLimitArgs={setLimitArgs}
-        setOrderArgs={setOrderArgs}
-        setPageArgs={setPageArgs}
-        setResolvedArgs={setResolvedArgs}
-        setSeverityArgs={setSeverityArgs}
-        resolvedArgs={resolvedArgs}
-        severityArgs={severityArgs}
-        orderArgs={orderArgs}
-        limitArgs={limitArgs}
-        pageArgs={pageArgs}
-        reports={data ? data.getProject.reports.reports : null}
-        length={length}
-      />
-    </PageWrap>
+    <>
+      <Helmet>
+        <meta name="description" content={`${type} Reports`} />
+        <title>Aardvark | {type} Reports</title>
+      </Helmet>
+      <PageWrap style={{ flexWrap: "wrap-reverse" }}>
+        <ReportsSection
+          loadingReports={loading}
+          setLimitArgs={setLimitArgs}
+          setOrderArgs={setOrderArgs}
+          setPageArgs={setPageArgs}
+          setResolvedArgs={setResolvedArgs}
+          setSeverityArgs={setSeverityArgs}
+          resolvedArgs={resolvedArgs}
+          severityArgs={severityArgs}
+          orderArgs={orderArgs}
+          limitArgs={limitArgs}
+          pageArgs={pageArgs}
+          reports={data ? data.getProject.reports.reports : null}
+          length={length}
+        />
+      </PageWrap>
+    </>
   );
 };
 

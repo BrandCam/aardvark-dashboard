@@ -18,6 +18,7 @@ import Sidebar from "./components/sidebar";
 import { UserContext } from "./HOC/Context/LoginContext";
 import { Layout } from "antd";
 import MsgSider from "./components/SideMsgs/MsgSider";
+import { Helmet } from "react-helmet";
 
 const { Footer, Content } = Layout;
 
@@ -26,6 +27,10 @@ function App() {
   let { loggedIn, project } = state;
   return (
     <div style={{}} className="App">
+      <Helmet>
+        <meta name="description" content="Beta testing made easy" />
+        <title>Aardvark</title>
+      </Helmet>
       <Layout style={{ minHeight: "100vh" }}>
         <Sidebar />
         <Layout>
